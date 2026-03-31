@@ -8,14 +8,6 @@ struct JuneShortcutApp: App {
     var body: some Scene {
         MenuBarExtra("JuneShortcut", systemImage: "command.square") {
             MenuBarView(viewModel: menuBarVM, shortcutListVM: shortcutListVM)
-                .onAppear {
-                    if shortcutListVM.entries.isEmpty {
-                        shortcutListVM.load()
-                    }
-                    if !HotkeyService.shared.isRunning {
-                        HotkeyService.shared.start()
-                    }
-                }
         }
         .menuBarExtraStyle(.window)
 
@@ -40,5 +32,6 @@ struct JuneShortcutApp: App {
         if !AccessibilityService.isGranted {
             AccessibilityService.requestAccess()
         }
+        HotkeyService.shared.start()
     }
 }

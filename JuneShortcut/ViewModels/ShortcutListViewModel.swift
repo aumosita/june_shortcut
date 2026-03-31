@@ -9,6 +9,11 @@ final class ShortcutListViewModel: ObservableObject {
     private let persistence = PersistenceService.shared
     private let hotkeyService = HotkeyService.shared
 
+    init() {
+        entries = persistence.load()
+        rebindHotkeys()
+    }
+
     var selectedEntry: ShortcutEntry? {
         entries.first { $0.id == selectedEntryID }
     }
