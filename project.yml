@@ -1,0 +1,27 @@
+name: JuneShortcut
+options:
+  bundleIdPrefix: com.juneshortcut
+  deploymentTarget:
+    macOS: "14.0"
+  xcodeVersion: "16.0"
+  minimumXcodeGenVersion: "2.38.0"
+
+targets:
+  JuneShortcut:
+    type: application
+    platform: macOS
+    sources:
+      - JuneShortcut
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: true
+        INFOPLIST_KEY_LSUIElement: true
+        PRODUCT_BUNDLE_IDENTIFIER: com.juneshortcut.app
+        MARKETING_VERSION: "1.0.0"
+        CURRENT_PROJECT_VERSION: "1"
+        SWIFT_VERSION: "5.9"
+        MACOSX_DEPLOYMENT_TARGET: "14.0"
+        CODE_SIGN_ENTITLEMENTS: JuneShortcut/JuneShortcut.entitlements
+        ENABLE_HARDENED_RUNTIME: true
+        CODE_SIGN_IDENTITY: "-"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
