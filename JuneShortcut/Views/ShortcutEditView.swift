@@ -5,11 +5,10 @@ struct ShortcutEditView: View {
     let entryID: UUID?
 
     @StateObject private var keyRecorderVM = KeyRecorderViewModel()
-    @State private var label = ""
     @State private var targets: [AppTarget] = []
     @State private var showingAppPicker = false
     @State private var showingConflictAlert = false
-    @State private var conflictLabel = ""
+    @State private var conflictDisplayName = ""
     @Environment(\.dismiss) private var dismiss
 
     private var isEditing: Bool { entryID != nil }
@@ -18,13 +17,6 @@ struct ShortcutEditView: View {
         VStack(alignment: .leading, spacing: 16) {
             Text(isEditing ? "단축키 편집" : "새 단축키 추가")
                 .font(.title2.bold())
-
-            VStack(alignment: .leading, spacing: 6) {
-                Text("이름")
-                    .font(.subheadline.bold())
-                TextField("예: 개발 도구 열기", text: $label)
-                    .textFieldStyle(.roundedBorder)
-            }
 
             VStack(alignment: .leading, spacing: 6) {
                 Text("단축키")
@@ -84,7 +76,7 @@ struct ShortcutEditView: View {
             }
         }
         .padding(20)
-        .frame(width: 400, height: 420)
+        .frame(width: 400, height: 380)
         .sheet(isPresented: $showingAppPicker) {
             AppPickerView(selectedTargets: $targets)
         }
@@ -92,11 +84,10 @@ struct ShortcutEditView: View {
             Button("대체") { forceSaveEntry() }
             Button("취소", role: .cancel) {}
         } message: {
-            Text("이 단축키는 이미 '\(conflictLabel)'에 할당되어 있습니다. 대체하시겠습니까?")
+            Text("이 단축키는 이미 '\(conflictDisplayName)'에 할당되어 있습니다. 대체하시겠습니까?")
         }
         .onAppear {
             if let id = entryID, let entry = listViewModel.entries.first(where: { $0.id == id }) {
-                label = entry.label
                 targets = entry.targets
                 keyRecorderVM.currentKeyCombo = entry.keyCombo
                 keyRecorderVM.state = .recorded(entry.keyCombo)
@@ -108,7 +99,7 @@ struct ShortcutEditView: View {
         guard let combo = keyRecorderVM.currentKeyCombo else { return }
 
         if let conflict = listViewModel.conflictingEntry(for: combo, excluding: entryID) {
-            conflictLabel = conflict.label
+            conflictDisplayName = conflict.displayName
             showingConflictAlert = true
             return
         }
@@ -119,7 +110,6 @@ struct ShortcutEditView: View {
     private func forceSaveEntry() {
         guard let combo = keyRecorderVM.currentKeyCombo else { return }
 
-        // Disable conflicting entry if any
         if let conflict = listViewModel.conflictingEntry(for: combo, excluding: entryID) {
             var updated = conflict
             updated.isEnabled = false
@@ -127,11 +117,9 @@ struct ShortcutEditView: View {
         }
 
         if let id = entryID {
-            var entry = ShortcutEntry(id: id, keyCombo: combo, targets: targets, isEnabled: true, label: label)
-            _ = entry // suppress warning
-            listViewModel.updateEntry(ShortcutEntry(id: id, keyCombo: combo, targets: targets, isEnabled: true, label: label))
+            listViewModel.updateEntry(ShortcutEntry(id: id, keyCombo: combo, targets: targets, isEnabled: true))
         } else {
-            listViewModel.addEntry(ShortcutEntry(keyCombo: combo, targets: targets, label: label))
+            listViewModel.addEntry(ShortcutEntry(keyCombo: combo, targets: targets))
         }
 
         dismiss()

@@ -32,7 +32,7 @@ struct MenuBarView: View {
                         Image(systemName: entry.isEnabled ? "checkmark.circle.fill" : "circle")
                             .foregroundColor(entry.isEnabled ? .accentColor : .secondary)
                             .font(.caption)
-                        Text(entry.label.isEmpty ? "이름 없음" : entry.label)
+                        Text(entry.displayName)
                             .font(.subheadline)
                             .lineLimit(1)
                         Spacer()

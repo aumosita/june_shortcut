@@ -16,7 +16,7 @@ struct ShortcutRowView: View {
             .labelsHidden()
 
             VStack(alignment: .leading, spacing: 2) {
-                Text(entry.label.isEmpty ? "이름 없음" : entry.label)
+                Text(entry.displayName)
                     .font(.body)
                     .foregroundColor(entry.isEnabled ? .primary : .secondary)
 
