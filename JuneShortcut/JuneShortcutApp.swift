@@ -6,7 +6,7 @@ struct JuneShortcutApp: App {
     @StateObject private var shortcutListVM = ShortcutListViewModel()
 
     var body: some Scene {
-        MenuBarExtra("JuneShortcut", image: "MenuBarIcon") {
+        MenuBarExtra("JuneShortcut", systemImage: "command.square") {
             MenuBarView(viewModel: menuBarVM, shortcutListVM: shortcutListVM)
                 .onAppear {
                     if shortcutListVM.entries.isEmpty {
